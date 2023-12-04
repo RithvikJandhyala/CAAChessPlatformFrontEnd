@@ -148,12 +148,16 @@ const AllPlayersReactTable=()=>{
         accessor: 'losses', 
       },
       {
-        Header: 'Ties',
+        Header: 'Stalemates',
         accessor: 'ties',        
       },
       {
         Header: 'Points Won',
         accessor: 'pointsWon',        
+      },
+      {
+        Header: 'Points Lost',
+        accessor: 'pointsLost',        
       },
       {
       Header: (localStorage.role == 'Admin' )? 'Action':' ',

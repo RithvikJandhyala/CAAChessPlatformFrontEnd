@@ -16,7 +16,7 @@ const optionsAwaySingles = [];
 
 const SINGLES = "Singles";
 
-const NOSHOW = 0;
+const GHOST = 0;
 const NOSELECTION = -1;
 const SINGLES_MAX_SCORE = 2;
 
@@ -143,29 +143,31 @@ const AddMatchDataH=()=> {
                 });
             }
         });
-         optionsHomeSingles.push({
+       /*  optionsHomeSingles.push({
             value: 0,
             label: 'No Show'
         });
         optionsAwaySingles.push({
             value: 0,
             label: 'No Show'
-        });
+        }); */
       
     }
 
     function isValidMatch(match, maxScore, num){
-        if (match.player1ID === NOSHOW )
+      /*  if (checkGhost(match.playerID) === GHOST )
             match.player1Score =0;
-        if (match.player2ID === NOSHOW )
+        if (checkGhost(match.player2ID) === GHOST )
             match.player2Score =0;
-        // No show should have value 0
-       if ((match.player1ID === NOSHOW &&  match.player1Score !==0) || (match.player2ID === NOSHOW &&  match.player2Score !==0)){
-            setError("Board " + num + ": Set score to 0 for No Show");
+        */
+       
+        // Ghost Player should have value 0
+       if ((checkGhost(match.player1ID) === GHOST &&  match.player1Score !==0) || (checkGhost(match.player2ID) === GHOST &&  match.player2Score !==0)){
+            setError("Board " + num + ": Set score to 0 for Ghost Player");
             return false;
         }
-        // If No Show filled for both players, it is valid match
-        else if (match.player1ID === NOSHOW &&  match.player2ID === NOSHOW ){
+        // If Ghost Player filled for both sides, it is valid match
+        else if (checkGhost(match.player1ID) === GHOST &&  checkGhost(match.player2ID) === GHOST ){
             return true;
         }
         //check players are filled in 
@@ -184,15 +186,23 @@ const AddMatchDataH=()=> {
         }
         return true;
     }
+    function checkGhost(playerID)
+    {
+        if(playerID % 500 === 0){
+            return GHOST
+        }
+        else
+            return playerID;
+    }
 
     function findPlayerID(selPlayer){
-        if(selPlayer === "No Show") {
-            return NOSHOW;
-        }
-        else if(selPlayer === "")
+      
+        if(selPlayer === ""){
             return NOSELECTION;
-        else
-            return parseInt(selPlayer.substring(0,4));        
+        }
+        else{
+            return parseInt(selPlayer.substring(0,4));    
+        }    
     }
 
     const saveMatches = async(e)  => {
@@ -237,12 +247,12 @@ const AddMatchDataH=()=> {
            
            for(var j = i+1; j < matches.length; j++){
            
-               if(player1ID !== NOSHOW && player1ID === matches[j].player1ID )
+               if(checkGhost(player1ID)  && player1ID === matches[j].player1ID )
                {
                    setError("Player " + player1ID+ " added to more than one match"); 
                    return;
                }
-               if(player2ID !== NOSHOW && player2ID === matches[j].player2ID){
+               if(checkGhost(player2ID)  && player2ID === matches[j].player2ID){
                    setError("Player " + player2ID+ " added to more than one match"); 
                    return;
                }

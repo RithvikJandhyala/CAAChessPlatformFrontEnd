@@ -137,7 +137,7 @@ const TeamStandingReactTable=()=>{
               ),        
           },
           {
-            Header: 'Ties',
+            Header: 'Stalemates',
             accessor: 'ties',        
           },
           {

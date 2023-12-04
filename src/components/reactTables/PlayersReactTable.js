@@ -76,7 +76,7 @@ const PlayersReactTable=()=>{
         accessor: 'losses', 
       },
       {
-        Header: 'Ties',
+        Header: 'Stalemates',
         accessor: 'ties',        
       },
       {

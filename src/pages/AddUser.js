@@ -127,10 +127,10 @@ const AddUser = () => {
                     <div className = "card-body">
                         <form action = "" >
                             <div  ref={inputUsername}>
-                                <h5>Username:</h5>
+                                <h5>Email:</h5>
                                     <input
                                         type = "text"
-                                        placeholder = "Example: jdoe"
+                                        placeholder = "Example: johndoe@gmail.com"
                                         name = "username"
                                        
                                         className = "form-control"

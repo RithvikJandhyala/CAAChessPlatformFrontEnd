@@ -82,7 +82,7 @@ const AllUsersReactTable=()=>{
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Username',
+        Header: 'Email',
         accessor: 'username',        
       },
       {

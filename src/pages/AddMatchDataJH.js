@@ -13,36 +13,40 @@ import 'react-toastify/dist/ReactToastify.css';
 import BarLoader from "react-spinners/BarLoader";
 const optionsHomeSingles = [{value:0,label:'No Show'}];
 const optionsAwaySingles = [{value:0,label:'No Show'}];
-const optionsHomeDoubles = [{value:0,label:'No Show'}];
-const optionsAwayDoubles = [{value:0,label:'No Show'}];
+
 const SINGLES = "Singles";
-const DOUBLES = "Doubles";
-const NOSHOW = 0;
+
+const GHOST = 0;
 const NOSELECTION = -1;
-const MAX_SCORE = 6;
+const SINGLES_MAX_SCORE = 2;
 
 const sleep = ms => new Promise(
     resolve => setTimeout(resolve, ms)
   );
 
-
-const scoreOptions = [ 
+const scoreOptionsFirst = [ 
   { value: 0, label: 0},
   { value: 1, label: 1},
   { value: 2, label: 2},
   { value: 3, label: 3},
   { value: 4, label: 4},
-  { value: 5, label: 5},
-  { value: 6, label: 6}
-
 ]
-const singlePlayerRows=[
+
+const scoreOptions = [ 
+    { value: 0, label: 0},
+    { value: 1, label: 1},
+    { value: 2, label: 2}
+  ]
+
+const boardRow1=[
     {
       option1:"",
       score1:"",
       option2:"",
       score2:""
-    },
+    }
+]
+const boardRows=[
     {
         option1:"",
         score1:"",
@@ -62,20 +66,6 @@ const singlePlayerRows=[
         score2:""
     }
 ];
-const doublePlayerRows=[
-    {
-      option1:"",
-      score1:"",
-      option2:"",
-      score2:""
-    },
-    {
-        option1:"",
-        score1:"",
-        option2:"",
-        score2:""
-    }
-]
 
 
 
@@ -97,21 +87,14 @@ const AddMatchDataJH=()=> {
             fetchData();
         }
         //reset matches
-        for(var i = 0; i < singlePlayerRows.length; i++) 
+        for(var i = 0; i < boardRows.length; i++) 
         {
-            singlePlayerRows[i].option1 = "";
-            singlePlayerRows[i].option2 = "";
-            singlePlayerRows[i].score1 = "";
-            singlePlayerRows[i].score2 = "";
+            boardRows[i].option1 = "";
+            boardRows[i].option2 = "";
+            boardRows[i].score1 = "";
+            boardRows[i].score2 = "";
         }              
-        for(var i = 0; i < doublePlayerRows.length; i++) 
-        {
-            doublePlayerRows[i].option1 = "";
-            doublePlayerRows[i].option2 = "";
-            doublePlayerRows[i].score1 = "";
-            doublePlayerRows[i].score2 = "";
-        }  
-        
+      
             // get Schools
             SchoolService.getSchools().then((response) => {                 
                 for(var i = 0; i < response.data.length; i++) 
@@ -127,15 +110,21 @@ const AddMatchDataJH=()=> {
             });                    
         
     },[]);
+    const getImage = (schoolName) => {    
+        console.log(schoolImages);
+        const foundSchool = schoolImages.find(school => schoolName === school.name);
+        if (foundSchool) {
+        return foundSchool.image;
+        }    
+        return null;
+    };
    
     const fetchData = () => {
         //reset options list
         optionsHomeSingles.length = 0;
         optionsAwaySingles.length = 0;
-        optionsHomeDoubles.length = 0;
-        optionsAwayDoubles.length = 0;
                
-        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.school,localStorage.matchDivision,"Singles").then((response) => {           
+        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.school,localStorage.matchDivision).then((response) => {           
             for(var i = 0; i < response.data.length; i++) 
             {
                 optionsHomeSingles.push({
@@ -144,7 +133,7 @@ const AddMatchDataJH=()=> {
                 });
             }
         });
-        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.awayTeam,localStorage.matchDivision,"Singles").then((response) => {           
+        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.awayTeam,localStorage.matchDivision).then((response) => {           
             for(var i = 0; i < response.data.length; i++) 
             {
                 optionsAwaySingles.push({
@@ -153,142 +142,109 @@ const AddMatchDataJH=()=> {
                 });
             }
         });
-        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.school,localStorage.matchDivision,"Doubles").then((response) => {           
-            for(var i = 0; i < response.data.length; i++) 
-            {
-                optionsHomeDoubles.push({
-                    value: response.data[i].playerID,
-                    label: response.data[i].playerID+" - "+response.data[i].name
-                });
-            }
-        });
-        PlayerService.getPlayersBySchoolAndDivisionAndPlayerType(localStorage.awayTeam,localStorage.matchDivision,"Doubles").then((response) => {           
-            for(var i = 0; i < response.data.length; i++) 
-            {
-                optionsAwayDoubles.push({
-                    value: response.data[i].playerID,
-                    label: response.data[i].playerID+" - "+response.data[i].name
-                });
-            }
-        });
-        optionsHomeSingles.push({
-            value: 0,
-            label: 'No Show'
-        });
-        optionsAwaySingles.push({
-            value: 0,
-            label: 'No Show'
-        });
-        optionsAwayDoubles.push({
-            value: 0,
-            label: 'No Show'
-        });
-        optionsHomeDoubles.push({
-            value: 0,
-            label: 'No Show'
-        });
+       
+       
     }
 
-    function isValidMatch(match,matchType, maxScore, num){
-        if (match.player1ID === NOSHOW )
-             match.player1Score =0;
-        if (match.player2ID === NOSHOW )
-             match.player2Score =0;
-        // No show should have value 0
-       if ((match.player1ID === NOSHOW &&  match.player1Score !==0) || (match.player2ID === NOSHOW &&  match.player2Score !==0)){
-            setError(matchType + " "+ num + ": Set score to 0 for No Show")
-            return false;
-        }
-        // If No Show filled for both players, it is valid match
-        else if (match.player1ID === NOSHOW &&  match.player2ID === NOSHOW ){
-            return true;
-        }
-        //check players are filled in 
-        else if(match.player1ID === NOSELECTION || match.player2ID === NOSELECTION){
-            setError("Invalid player details for "+ matchType + " "+ num)
-            return false;
-        }   
-        // check scores are filled in         
-        else if(match.player1Score ==='' || match.player2Score ===''){
-            setError("Invalid score details for "+ matchType + " "+ num)
-            return false;
-        }
-        // check one of the player has max score
-        else if(Math.max(match.player1Score,match.player2Score) !== maxScore){
-            setError("Invalid max score for "+ matchType + " "+ num)
-            return false;
-        }
-        // check that both players dont have match score
-        else if(match.player1Score === maxScore && match.player2Score ===  maxScore){
-            setError("Invalid max score for "+ matchType + " "+ num)
-            return false;
-        }
-        return true;
-
+    function isValidMatch(match, maxScore, num){
+        /*  if (checkGhost(match.playerID) === GHOST )
+              match.player1Score =0;
+          if (checkGhost(match.player2ID) === GHOST )
+              match.player2Score =0;
+          */
+         
+          // Ghost Player should have value 0
+         if ((checkGhost(match.player1ID) === GHOST &&  match.player1Score !==0) || (checkGhost(match.player2ID) === GHOST &&  match.player2Score !==0)){
+              setError("Board " + num + ": Set score to 0 for Ghost Player");
+              return false;
+          }
+          // If Ghost Player filled for both sides, it is valid match
+          else if (checkGhost(match.player1ID) === GHOST &&  checkGhost(match.player2ID) === GHOST ){
+              return true;
+          }
+          //check players are filled in 
+          else if(match.player1ID === NOSELECTION || match.player2ID === NOSELECTION){
+              setError( "Board " + num +": Invalid player details");
+              return false;
+          }   
+          // check scores are filled in         
+          else if(match.player1Score ==='' || match.player2Score ===''){
+              setError( "Board "+ num + ": Invalid scores");
+              return false;
+          }
+          else if(match.player1Score + match.player2Score != maxScore){
+              setError("Total score for Board " + num+ " should be " +maxScore );
+              return false
+          }
+          return true;
     }
-
-    function findPlayerID(selPlayer){
-        if(selPlayer === "No Show") {
-            return NOSHOW;
+    function checkGhost(playerID)
+    {
+        if(playerID % 500 === 0){
+            return GHOST
         }
-        else if(selPlayer === "")
-            return NOSELECTION;
         else
-            return parseInt(selPlayer.substring(0,4));        
+            return playerID;
     }
-
+    function findPlayerID(selPlayer){
+      
+        if(selPlayer === ""){
+            return NOSELECTION;
+        }
+        else{
+            return parseInt(selPlayer.substring(0,4));    
+        }    
+    }
 
     const saveMatches = async(e) => {
-             
         var matches = [];
         matches.length = 0;       
         e.preventDefault();
-        for (var i = 0; i < singlePlayerRows.length; i++){
-            var player1ID = findPlayerID(singlePlayerRows[i].option1);
-            var player1Score = singlePlayerRows[i].score1;
-            var player2ID =  findPlayerID(singlePlayerRows[i].option2); 
-            var player2Score = singlePlayerRows[i].score2;
+        for (var i = 0; i < boardRow1.length; i++){
+            var player1ID = findPlayerID(boardRow1[i].option1);
+            var player1Score = boardRow1[i].score1;
+            var player2ID =  findPlayerID(boardRow1[i].option2); 
+            var player2Score = boardRow1[i].score2;
             var division = localStorage.matchDivision;
-            var matchType = SINGLES;
             var matchDate = localStorage.matchDate;
             var homeTeam = localStorage.school;
             var awayTeam = localStorage.awayTeam;
-            var matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchType,matchDate,homeTeam,awayTeam};
-            if(isValidMatch(matchdetails,SINGLES,MAX_SCORE, i+1)) 
+            var matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchDate,homeTeam,awayTeam};
+            if(isValidMatch(matchdetails,4, i+1)) 
                 matches.push(matchdetails);
             else return;
         }
        
 
-        for (var i = 0; i < doublePlayerRows.length; i++){
-            var player1ID = findPlayerID(doublePlayerRows[i].option1);
-            var player1Score = doublePlayerRows[i].score1;
-            var player2ID = findPlayerID(doublePlayerRows[i].option2);
-            var player2Score = doublePlayerRows[i].score2;
+        for (var i = 0; i < boardRows.length; i++){
+            var player1ID = findPlayerID(boardRows[i].option1);
+            var player1Score = boardRows[i].score1;
+            var player2ID =  findPlayerID(boardRows[i].option2); 
+            var player2Score = boardRows[i].score2;
             var division = localStorage.matchDivision;
-            var matchType = DOUBLES;
             var matchDate = localStorage.matchDate;
             var homeTeam = localStorage.school;
             var awayTeam = localStorage.awayTeam;
-            var matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchType,matchDate,homeTeam,awayTeam};
-            if(isValidMatch(matchdetails,DOUBLES,MAX_SCORE, i+1))
-                matches.push(matchdetails);     
-            else return;      
+            var matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchDate,homeTeam,awayTeam};
+            if(isValidMatch(matchdetails,2, i+2)) 
+                matches.push(matchdetails);
+            else return;
         }
         
-       
-         /* check if player is in more than one match */
-         for( var i = 0; i < matches.length; i++){
+        
+        /* check if player is in more than one match */
+        for( var i = 0; i < matches.length; i++){
             var player1ID = matches[i].player1ID;
-            var player2ID = matches[i].player2ID;           
+            var player2ID = matches[i].player2ID;
+           
            for(var j = i+1; j < matches.length; j++){
            
-               if(player1ID !== NOSHOW && player1ID === matches[j].player1ID )
+               if(checkGhost(player1ID)  && player1ID === matches[j].player1ID )
                {
                    setError("Player " + player1ID+ " added to more than one match"); 
                    return;
                }
-               if(player2ID !== NOSHOW &&player2ID === matches[j].player2ID){
+               if(checkGhost(player2ID)  && player2ID === matches[j].player2ID){
                    setError("Player " + player2ID+ " added to more than one match"); 
                    return;
                }
@@ -314,15 +270,6 @@ const AddMatchDataJH=()=> {
         })
         setLoading(false);   
     }   
-    const getImage = (schoolName) => {    
-        console.log(schoolImages);
-        const foundSchool = schoolImages.find(school => schoolName === school.name);
-        if (foundSchool) {
-        return foundSchool.image;
-        }    
-        return null;
-    };
-
    return (
         
         <div>
@@ -392,7 +339,7 @@ const AddMatchDataJH=()=> {
                         </tr>
                     </thead>
                     <tbody> 
-                    {singlePlayerRows.map((val,index)=>
+                    {boardRow1.map((val,index)=>
                         ( <tr key={index}>
                         <th > Singles {index+1} </th>
                         <th  style={{width: '35%'}}>  
@@ -439,53 +386,7 @@ const AddMatchDataJH=()=> {
                             
                     </tr>)
                     )}
-                    {doublePlayerRows.map((val,index)=>
-                        ( <tr key={index}>
-                        <th > Doubles {index+1} </th>
-                        <th  style={{width: '35%'}}>  
-                            <Select
-                                type = "text"
-                                placeholder = ""
-                                name={`player${index}Id`}                                
-                                onChange = {(e) =>{ val.option1=e.label; }} 
-                                options={optionsHomeDoubles}
-                            /> 
-                        </th>                      
-                    
-                        <th  style={{width: '10%'}}>  
-                                <Select
-                                    type = "text"
-                                    placeholder = ""
-                                    name={`player${index}score`}                                    
-                                    onChange = {(e) =>{val.score1 = e.label;}} 
-                                    options={scoreOptions}
-                                    isSearchable={false}                                       
-                                />
-                        </th>
-                 
-                        <th  style={{width: '35%'}}> 
-                        <Select
-                                type = "text"
-                                placeholder = ""
-                                name={`player${index+1}Id`} 
-                                
-                                onChange = {(e) =>{ val.option2=e.label; }}  
-                                options={optionsAwayDoubles}
-                            /> 
-                        </th>
-                        <th  style={{width: '10%'}}> 
-                                <Select
-                                    type = "text"
-                                    placeholder = ""
-                                    name={`player${index+1}Score`}                                    
-                                    onChange = {(e) =>{ val.score2=e.label; }} 
-                                    options={scoreOptions}
-                                    isSearchable={false} 
-                                />
-                        </th>
-                            
-                    </tr>)
-                    )}
+                   
                         
                     
                     </tbody>
