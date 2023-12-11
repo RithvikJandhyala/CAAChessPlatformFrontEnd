@@ -42,20 +42,21 @@ const TeamStandingReactTable=()=>{
     const schoolImages = [];
     const [error, setError] = useState("");
   // get Schools
-  SchoolService.getSchools().then((response) => {           
-    for(var i = 0; i < response.data.length; i++) 
-    {
-            {schoolImages.push({
-                name: response.data[i].name,
-                image: response.data[i].image,
-            });
-        }
-    }
-  });
+  
 
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
+      await SchoolService.getSchools().then((response) => {           
+        for(var i = 0; i < response.data.length; i++) 
+        {
+                {schoolImages.push({
+                    name: response.data[i].name,
+                    image: response.data[i].image,
+                });
+            }
+        }
+      });
       await MatchService.getTeamStanding().then((response) => {           
         setTeamStandings(response.data);
       });

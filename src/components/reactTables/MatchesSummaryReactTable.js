@@ -30,22 +30,23 @@ const MatchesSummaryReactTable=()=>{
   const [error, setError] = useState("");
   const navigate  = useNavigate();
   const schoolImages = [];
-  // get Schools
-  SchoolService.getSchools().then((response) => {           
-    for(var i = 0; i < response.data.length; i++) 
-    {
-            {schoolImages.push({
-                name: response.data[i].name,
-                image: response.data[i].image,
-            });
-        }
-    }
-  });
+  
+ 
 
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
       //await sleep(2000);
+      await  SchoolService.getSchools().then((response) => {           
+        for(var i = 0; i < response.data.length; i++) 
+        {
+                {schoolImages.push({
+                    name: response.data[i].name,
+                    image: response.data[i].image,
+                });
+            }
+        }
+      });
       await MatchService.getMatchesDaySummary().then((response) => {           
         setMatchesDaySummary(response.data);
       });

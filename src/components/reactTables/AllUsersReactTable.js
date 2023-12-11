@@ -25,7 +25,7 @@ const AllUsersReactTable=()=>{
   const navigate=useNavigate();
   const schoolImages = [];
   // get Schools
-  SchoolService.getSchools().then((response) => {           
+  /*SchoolService.getSchools().then((response) => {           
     for(var i = 0; i < response.data.length; i++) 
     {
             {schoolImages.push({
@@ -34,16 +34,28 @@ const AllUsersReactTable=()=>{
             });
         }
     }
-  });
+  }); */
   
   useEffect(()=>{
     async function fetchData() {
      
       setLoading(true);
       //await sleep(4000);
+      await SchoolService.getSchools().then((response) => {           
+        for(var i = 0; i < response.data.length; i++) 
+        {
+                {schoolImages.push({
+                    name: response.data[i].name,
+                    image: response.data[i].image,
+                });
+            }
+        }
+      });
+
       await UserService.getUsers().then((response) => {           
         setUsers(response.data);
       });
+      
       setLoading(false);  
       
     }
@@ -51,6 +63,8 @@ const AllUsersReactTable=()=>{
       
 
   },[]);
+
+
  async function deleteUser(username) {
 
     const confirmed = window.confirm('Are you sure you want to delete this user?');
