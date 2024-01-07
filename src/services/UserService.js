@@ -1,5 +1,5 @@
 import axios from 'axios'
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'https://azcaachessbackend-2c61c505bb61.herokuapp.com';
 const USER_LOGIN_REST_API_URL = SERVER_URL + '/userlogin';
 const USER_CREATE_USER_API = SERVER_URL + '/addUser';
 const USER_FIND_ALL = SERVER_URL + '/findAllUsers'
