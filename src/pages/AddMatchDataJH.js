@@ -178,10 +178,10 @@ const AddMatchDataJH=()=> {
             return NOSELECTION;
         }
         else{
-            return parseInt(selPlayer.substring(0,5));    
+            var dashIndex = selPlayer.indexOf("-") 
+            return parseInt(selPlayer.substring(0,dashIndex-1));    
         }    
     }
-
     const saveMatches = async(e) => {
         var matches = [];
         matches.length = 0;       
