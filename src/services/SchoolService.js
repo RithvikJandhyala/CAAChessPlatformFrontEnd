@@ -1,5 +1,5 @@
 import axios from 'axios'
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'https://azcaachessbackend-2c61c505bb61.herokuapp.com';
 const SCHOOLS_REST_API_URL = SERVER_URL + '/findAllSchools';
 const SCHOOL_DELETE = SERVER_URL + '/deleteSchool';
 const SCHOOLS_ADD = SERVER_URL + '/schools/add';
