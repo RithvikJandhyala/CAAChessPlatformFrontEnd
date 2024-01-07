@@ -2,16 +2,11 @@ import { useTable, useGlobalFilter } from 'react-table'
 import React,{useState, useEffect} from 'react';
 import MatchService from '../../services/MatchService';
 import {CSVLink} from 'react-csv';
-import pic from "../images/player1.png";
-import Doubles from "../images/doubles.png"
 import win from "../images/check.png";
-import * as GiIcons from 'react-icons/gi';
 import { GlobalFilter } from '../GlobalFilter.js';
 import * as SiIcons from 'react-icons/si';
-import * as BiIcons from 'react-icons/bi';
 import { FaChessBoard } from "react-icons/fa6";
 import { FaChessPawn } from "react-icons/fa";
-
 
 import SchoolService from '../../services/SchoolService';
 import {useNavigate} from "react-router-dom";
@@ -26,17 +21,12 @@ const divisions = [
 
 const PlayerMatchesReactTable=()=>{ 
   const [data,setMatches]=useState([]);
-  const navigate=useNavigate();
   const [loading,setLoading] = useState(false);
-  const sleep = ms => new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
   const schoolImages = [];
   
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
-      //await sleep(4000);
       await SchoolService.getSchools().then((response) => {           
         for(var i = 0; i < response.data.length; i++) 
         {

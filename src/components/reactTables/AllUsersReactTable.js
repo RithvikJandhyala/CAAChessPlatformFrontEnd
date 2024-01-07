@@ -1,22 +1,15 @@
 import { useTable, useGlobalFilter, useSortBy } from 'react-table'
 import React,{useState, useEffect} from 'react';
-import PlayerService from '../../services/PlayerService';
-import pic from "../images/player1.png";
-import Doubles from "../images/doubles.png"
 import {CSVLink} from 'react-csv';
 import * as RiIcons from 'react-icons/ri';
 import * as SiIcons from 'react-icons/si';
 import { GlobalFilter } from '../GlobalFilter';
 import SchoolService from '../../services/SchoolService';
 import ClipLoader from "react-spinners/ClipLoader";
-import Select from 'react-select';
 import UserService from '../../services/UserService';
 import {useNavigate} from "react-router-dom";
 import * as AiIcons from 'react-icons/ai';
 import * as HiIcons from 'react-icons/hi'
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
 
 const AllUsersReactTable=()=>{ 
   const [data,setUsers]=useState([]);
@@ -24,31 +17,18 @@ const AllUsersReactTable=()=>{
   const [error, setError] = useState("");
   const navigate=useNavigate();
   const schoolImages = [];
-  // get Schools
-  /*SchoolService.getSchools().then((response) => {           
-    for(var i = 0; i < response.data.length; i++) 
-    {
-            {schoolImages.push({
-                name: response.data[i].name,
-                image: response.data[i].image,
-            });
-        }
-    }
-  }); */
-  
+ 
   useEffect(()=>{
     async function fetchData() {
      
       setLoading(true);
-      //await sleep(4000);
       await SchoolService.getSchools().then((response) => {           
         for(var i = 0; i < response.data.length; i++) 
         {
-                {schoolImages.push({
+                schoolImages.push({
                     name: response.data[i].name,
                     image: response.data[i].image,
                 });
-            }
         }
       });
 
@@ -75,7 +55,6 @@ const AllUsersReactTable=()=>{
     try {
       await UserService.deleteUser(username);
       localStorage.message = "User " + username + ' Deleted Successfully';
-           //navigate('/matches-summary');
     } catch (error) {
       console.log(error);
       setError('Failed to Delete Match');
@@ -121,10 +100,10 @@ const AllUsersReactTable=()=>{
           accessor: 'homeTeam',        
       },
       {
-        Header: (localStorage.role == 'Admin' )? 'Action':' ',
+        Header: (localStorage.role === 'Admin' )? 'Action':' ',
         Cell: tableProps => (
         <div>
-          {(localStorage.role == 'Admin' )? 
+          {(localStorage.role === 'Admin' )? 
           <button onClick={(e)=>{ deleteUser(tableProps.row.original.username);}} className = "btn "  disabled = {loading}><RiIcons.RiDeleteBin6Line/></button>: 
           <></>}             
                     

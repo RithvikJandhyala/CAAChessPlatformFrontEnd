@@ -14,7 +14,7 @@ function Help() {
             text: 'If unsure how to use the platform, watch the demo video below'
         },{
             title: 'Creator',
-            text: 'Platform created and designed by Rithvik Jandhyala. This Platform was created using React, Springboot and MongoDB. Copyright @CAATennisPlatform'
+            text: 'Platform created and designed by Rithvik Jandhyala. This Platform was created using React, Springboot and MongoDB. Copyright @CAAChessPlatform'
         }
     ])
   return (

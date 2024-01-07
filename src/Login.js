@@ -16,12 +16,6 @@ function Login() {
   const [error, setError] = useState("");
   const [loading,setLoading] = useState(false);
   const[showPassword,setShowPassword] = useState(false);
-  const seePassword = () => setShowPassword(!showPassword);
-  const sleep = ms => new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
-
-
   useEffect(()=>{
     if(localStorage.username !== undefined){
         navigate("/home");
@@ -32,7 +26,6 @@ function Login() {
     e.preventDefault();
     setLoading(true); 
     const user = {username,password};
-    //await sleep(500);  
     await UserService.authenticateUser(user).then((response) =>{
       
         if(response.data===""){  
@@ -45,7 +38,7 @@ function Login() {
             localStorage.lastName = response.data.lastName;
             localStorage.username = username;
             localStorage.role = response.data.role;
-            if(response.data.role != "Admin"){
+            if(response.data.role !== "Admin"){
                 navigate('/home'); 
                 window.location.reload(false); 
             }
@@ -78,7 +71,6 @@ function Login() {
         width:'80%',
         bottom: 30,
         borderRadius : 20,
-        background: "rgb(0, 0, 0)", /* Fallback color */
         background: "rgba(0, 0, 0, 0.5)", /* Black background with 0.5 opacity */
         color: "#f1f1f1", /* Grey text */  
         padding: 20 ,/* Some padding */

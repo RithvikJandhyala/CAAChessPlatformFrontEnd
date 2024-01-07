@@ -3,9 +3,7 @@ import React,{useState, useEffect} from 'react';
 import MatchService from '../../services/MatchService';
 import {CSVLink} from 'react-csv';
 import * as BsIcons from 'react-icons/bs';
-import * as IoIcons from 'react-icons/io';
 import * as SiIcons from 'react-icons/si';
-import * as GrIcons from 'react-icons/gr';
 import { IoMdRefresh } from "react-icons/io";
 import { GlobalFilter } from '../GlobalFilter';
 import SchoolService from '../../services/SchoolService';
@@ -16,19 +14,6 @@ import Select from 'react-select';
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-
-const schools = [
-  { value: "BASIS Scottsdale", label: 'BASIS Scottsdale' },
-  { value: 'BASIS Mesa', label: 'BASIS Mesa' },
-  { value: 'BASIS Ahwatukee', label: 'BASIS Ahwatukee' },
-  { value: 'Heritage Academy Maricopa', label: 'Heritage Academy Maricopa' },
-  { value: 'Heritage Academy Mesa', label: 'Heritage Academy Mesa' },
-  { value: 'Benjamin Franklin Charter',label: 'Benjamin Franklin Charter' },
-  { value: 'ALA Gilbert North',  label: 'ALA Gilbert North'},
-  { value: 'BASIS Prescott', label: 'BASIS Prescott' },
-  { value: 'Tri-City Christian',label: 'Tri-City Christian' },
-]
-
 const divisions = [
   { value: 'All Divisions', label: 'All Divisions' },
   { value: "JH", label: 'JH' },
@@ -41,9 +26,7 @@ const TeamStandingReactTable=()=>{
     const [loading,setLoading] = useState(false);
     const schoolImages = [];
     const [error, setError] = useState("");
-  // get Schools
-  
-
+ 
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
@@ -67,7 +50,6 @@ const TeamStandingReactTable=()=>{
 
   async function fetchDataByDivision(division) {     
     setLoading(true);
-    //await sleep(2000);
     await MatchService.getTeamStandingByDivision(division).then((response) => {           
       setTeamStandings(response.data);
     });

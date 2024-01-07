@@ -31,7 +31,7 @@ class MatchService {
         return  axios.get(TEAM_STANDING_REST_API_URL+"/"+division+"/"+school);
     }
     getTeamStandingByDivision(division){
-        if(division=='All'){
+        if(division ==='All'){
             return  axios.get(TEAM_STANDING_REST_API_URL)
         }
         else{

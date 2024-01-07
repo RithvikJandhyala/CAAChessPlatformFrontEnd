@@ -3,7 +3,6 @@ import React,{useState, useEffect} from 'react';
 import MatchService from '../../services/MatchService';
 import {CSVLink} from 'react-csv';
 import win from "../images/check.png";
-import * as B from 'react-icons/md';
 import * as SiIcons from 'react-icons/si';
 import * as RiIcons from 'react-icons/ri';
 import { FaChessKing } from "react-icons/fa";
@@ -11,11 +10,6 @@ import { GlobalFilter } from '../GlobalFilter';
 import SchoolService from '../../services/SchoolService';
 import ClipLoader from "react-spinners/ClipLoader";
 import Select from 'react-select';
-import {useNavigate} from 'react-router-dom'
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
-
 
 const divisions = [
   { value: 'All Divisions', label: 'All Divisions' },
@@ -23,28 +17,22 @@ const divisions = [
   { value: "HS", label: 'HS' },
 ]
 
-
 const MatchesSummaryReactTable=()=>{ 
   const [data,setMatchesDaySummary]=useState([]);
   const [loading,setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate  = useNavigate();
   const schoolImages = [];
-  
- 
 
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
-      //await sleep(2000);
       await  SchoolService.getSchools().then((response) => {           
         for(var i = 0; i < response.data.length; i++) 
         {
-                {schoolImages.push({
+                schoolImages.push({
                     name: response.data[i].name,
                     image: response.data[i].image,
-                });
-            }
+                });            
         }
       });
       await MatchService.getMatchesDaySummary().then((response) => {           
@@ -56,7 +44,6 @@ const MatchesSummaryReactTable=()=>{
   },[]);
 
   async function deleteMatchSummary(id) {
-
     const confirmed = window.confirm('Are you sure you want to delete this match summary?');
     if (!confirmed) {
       return;
@@ -65,7 +52,6 @@ const MatchesSummaryReactTable=()=>{
     try {
       await MatchService.deleteMatchSummary(id);
       localStorage.message = "Match Summary " + id + ' Deleted Successfully';
-           //navigate('/matches-summary');
     } catch (error) {
       console.log(error);
       setError('Failed to Delete Match');
@@ -145,10 +131,10 @@ const MatchesSummaryReactTable=()=>{
             accessor: 'awayTeamPoints',     
           },
           {
-            Header: (localStorage.role == 'Admin' )? 'Action':' ',
+            Header: (localStorage.role === 'Admin' )? 'Action':' ',
             Cell: tableProps => (
               <div>
-                {(localStorage.role == 'Admin' )? 
+                {(localStorage.role === 'Admin' )? 
                 <button onClick={(e)=>{ deleteMatchSummary(tableProps.row.original.id);}} className = "btn"  disabled = {loading}><RiIcons.RiDeleteBin6Line/></button>: 
                 <></>}             
                           

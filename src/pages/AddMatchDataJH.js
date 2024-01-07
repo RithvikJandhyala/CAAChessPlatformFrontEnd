@@ -13,16 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import BarLoader from "react-spinners/BarLoader";
 const optionsHomeSingles = [{value:0,label:'No Show'}];
 const optionsAwaySingles = [{value:0,label:'No Show'}];
-
-const SINGLES = "Singles";
-
 const GHOST = 0;
 const NOSELECTION = -1;
-const SINGLES_MAX_SCORE = 2;
-
-const sleep = ms => new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
 
 const scoreOptionsFirst = [ 
   { value: 0, label: 0},
@@ -147,12 +139,6 @@ const AddMatchDataJH=()=> {
     }
 
     function isValidMatch(match, maxScore, num){
-        /*  if (checkGhost(match.playerID) === GHOST )
-              match.player1Score =0;
-          if (checkGhost(match.player2ID) === GHOST )
-              match.player2Score =0;
-          */
-         
           // Ghost Player should have value 0
          if ((checkGhost(match.player1ID) === GHOST &&  match.player1Score !==0) || (checkGhost(match.player2ID) === GHOST &&  match.player2Score !==0)){
               setError("Board " + num + ": Set score to 0 for Ghost Player");
@@ -192,7 +178,7 @@ const AddMatchDataJH=()=> {
             return NOSELECTION;
         }
         else{
-            return parseInt(selPlayer.substring(0,4));    
+            return parseInt(selPlayer.substring(0,5));    
         }    
     }
 
@@ -216,16 +202,16 @@ const AddMatchDataJH=()=> {
         }
        
 
-        for (var i = 0; i < boardRows.length; i++){
-            var player1ID = findPlayerID(boardRows[i].option1);
-            var player1Score = boardRows[i].score1;
-            var player2ID =  findPlayerID(boardRows[i].option2); 
-            var player2Score = boardRows[i].score2;
-            var division = localStorage.matchDivision;
-            var matchDate = localStorage.matchDate;
-            var homeTeam = localStorage.school;
-            var awayTeam = localStorage.awayTeam;
-            var matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchDate,homeTeam,awayTeam};
+        for ( i = 0; i < boardRows.length; i++){
+             player1ID = findPlayerID(boardRows[i].option1);
+             player1Score = boardRows[i].score1;
+             player2ID =  findPlayerID(boardRows[i].option2); 
+             player2Score = boardRows[i].score2;
+             division = localStorage.matchDivision;
+             matchDate = localStorage.matchDate;
+             homeTeam = localStorage.school;
+             awayTeam = localStorage.awayTeam;
+             matchdetails = {player1ID,player2ID,player1Score,player2Score,division,matchDate,homeTeam,awayTeam};
             if(isValidMatch(matchdetails,2, i+2)) 
                 matches.push(matchdetails);
             else return;
@@ -233,9 +219,9 @@ const AddMatchDataJH=()=> {
         
         
         /* check if player is in more than one match */
-        for( var i = 0; i < matches.length; i++){
-            var player1ID = matches[i].player1ID;
-            var player2ID = matches[i].player2ID;
+        for(  i = 0; i < matches.length; i++){
+             player1ID = matches[i].player1ID;
+             player2ID = matches[i].player2ID;
            
            for(var j = i+1; j < matches.length; j++){
            

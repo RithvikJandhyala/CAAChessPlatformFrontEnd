@@ -1,11 +1,8 @@
 import React, {useState,useRef,useEffect} from 'react'
-import UserService from '../services/UserService'
 import {useNavigate} from 'react-router-dom'
 import Navbar from '../components/Navbar';
 import BarLoader from "react-spinners/BarLoader";
 import SchoolService from '../services/SchoolService';
-import Select from 'react-select';
-import axios from 'axios'
 
 const AddSchool = () => {
   const [name,setName] = useState('');

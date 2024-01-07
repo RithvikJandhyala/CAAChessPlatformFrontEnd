@@ -1,8 +1,6 @@
 import { useTable, useGlobalFilter, useSortBy } from 'react-table'
 import React,{useState, useEffect} from 'react';
 import PlayerService from '../../services/PlayerService';
-import pic from "../images/player1.png";
-import Doubles from "../images/doubles.png"
 import {CSVLink} from 'react-csv';
 import * as RiIcons from 'react-icons/ri';
 import * as SiIcons from 'react-icons/si';
@@ -11,7 +9,6 @@ import SchoolService from '../../services/SchoolService';
 import ClipLoader from "react-spinners/ClipLoader";
 import Select from 'react-select';
 import {useNavigate} from "react-router-dom";
-import * as AiIcons from 'react-icons/ai';
 import { FaChessPawn } from "react-icons/fa";
 
 const sleep = (milliseconds) => {
@@ -27,23 +24,21 @@ const divisions = [
 
 const AllPlayersReactTable=()=>{ 
   const [data,setPlayers]=useState([]);
-  const [schools,setSchools]=useState([]);
   const [loading,setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate=useNavigate();
   const schoolImages = [];
   
   useEffect(()=>{
     async function fetchData() {     
       setLoading(true);
+      // get Schools
       await SchoolService.getSchools().then((response) => {           
         for(var i = 0; i < response.data.length; i++) 
         {
-                {schoolImages.push({
+                schoolImages.push({
                     name: response.data[i].name,
                     image: response.data[i].image,
-                });
-            }
+                });            
         }
       });
       await PlayerService.getPlayers().then((response) => {           
@@ -155,14 +150,10 @@ const AllPlayersReactTable=()=>{
         accessor: 'pointsWon',        
       },
       {
-        Header: 'Points Lost',
-        accessor: 'pointsLost',        
-      },
-      {
-      Header: (localStorage.role == 'Admin' )? 'Action':' ',
+      Header: (localStorage.role === 'Admin' )? 'Action':' ',
       Cell: tableProps => (
         <div>
-          {(localStorage.role == 'Admin' )? 
+          {(localStorage.role === 'Admin' )? 
           <button style={{ borderRadius: 50 }} onClick={(e)=>{ deletePlayer(tableProps.row.original.playerID);}} className = " btn"   disabled = {loading}><RiIcons.RiDeleteBin6Line/></button>
           //<RiIcons.RiDeleteBin6Line style={{ color: 'red', }}/>
           : 

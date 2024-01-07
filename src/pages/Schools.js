@@ -12,11 +12,11 @@ const Schools=()=>{
         if(localStorage.username === undefined){
             navigate("/");
         }
-        if(localStorage.role != "Admin"){
+        if(localStorage.role !== "Admin"){
             navigate("/home");
         }
          // show any toast messages
-         if(localStorage.message !== undefined && localStorage.message.length > 0 && localStorage.role == "Admin"){
+         if(localStorage.message !== undefined && localStorage.message.length > 0 && localStorage.role === "Admin"){
             toast.success(localStorage.message, {
                 position: toast.POSITION.TOP_CENTER
             });

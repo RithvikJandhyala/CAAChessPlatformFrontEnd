@@ -1,10 +1,6 @@
 import React,{useState, useEffect, useRef } from 'react';
 import { useTable, useGlobalFilter} from 'react-table'
 import PlayerService from '../../services/PlayerService';
-import pic from "../images/player1.png";
-import Singles from "../images/singles.png";
-import Doubles from "../images/doubles.png";
-import TableScrollbar from 'react-table-scrollbar';
 import * as AiIcons from 'react-icons/ai';
 import * as BsIcons from 'react-icons/bs';
 import * as GiIcons from 'react-icons/gi';
@@ -21,7 +17,6 @@ const PlayersReactTable=()=>{
   useEffect(()=>{
     async function fetchData() {
       setLoading(true);
-      //await sleep(4000);
       await PlayerService.getPlayersBySchool(localStorage.school).then((response) => {           
           setPlayers(response.data);
       });

@@ -1,24 +1,13 @@
 import { useTable, useGlobalFilter, useSortBy } from 'react-table'
 import React,{useState, useEffect} from 'react';
-import PlayerService from '../../services/PlayerService';
-import pic from "../images/player1.png";
-import Doubles from "../images/doubles.png"
 import {CSVLink} from 'react-csv';
 import * as RiIcons from 'react-icons/ri';
 import * as SiIcons from 'react-icons/si';
 import { GlobalFilter } from '../GlobalFilter';
 import SchoolService from '../../services/SchoolService';
 import ClipLoader from "react-spinners/ClipLoader";
-import Select from 'react-select';
-import UserService from '../../services/UserService';
 import {useNavigate} from "react-router-dom";
-import * as AiIcons from 'react-icons/ai';
-import * as HiIcons from 'react-icons/hi';
 import * as FaIcons from 'react-icons/fa';
-import MatchService from '../../services/MatchService';
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
 
 const SchoolsReactTable=()=>{ 
   const [data,setSchools]=useState([]);
@@ -28,10 +17,8 @@ const SchoolsReactTable=()=>{
   const navigate=useNavigate();
   
   useEffect(()=>{
-    async function fetchData() {
-     
+    async function fetchData() {     
       setLoading(true);
-      //await sleep(4000);
       await SchoolService.getSchools().then((response) => {           
         setSchools(response.data);
       });
@@ -82,10 +69,10 @@ const SchoolsReactTable=()=>{
       },
      
       {
-        Header: (localStorage.role == 'Admin' )? 'Action':' ',
+        Header: (localStorage.role === 'Admin' )? 'Action':' ',
         Cell: tableProps => (
         <div>
-          {(localStorage.role == 'Admin' )? 
+          {(localStorage.role === 'Admin' )? 
           <button onClick={(e)=>{ deleteSchool(tableProps.row.original.id);}} className = "btn "  disabled = {loading}><RiIcons.RiDeleteBin6Line/></button>: 
           <></>}             
                     

@@ -12,7 +12,7 @@ const MatchesSummary=()=>{
             navigate("/");
         }
          // show any toast messages
-         if(localStorage.message !== undefined && localStorage.message.length > 0 && localStorage.role == "Admin"){
+         if(localStorage.message !== undefined && localStorage.message.length > 0 && localStorage.role === "Admin"){
             toast.success(localStorage.message, {
                 position: toast.POSITION.TOP_CENTER
             });
