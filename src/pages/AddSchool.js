@@ -31,7 +31,7 @@ const AddSchool = () => {
         if(isValidForm()){
             setLoading(true); 
             const formData = new FormData();
-            formData.append('name', name);
+            formData.append('name', name.trim());
             formData.append('image', image);
             await SchoolService.addSchool(formData).then((response) => {                     
                 localStorage.message = 'School added successfully with ID: ' + response.data;
