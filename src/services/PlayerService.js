@@ -12,10 +12,16 @@ class PlayerService {
     getPlayers(){
        return  axios.get(PLAYERS_REST_API_URL);
     }
-    getPlayersBySchool(school){
+   getPlayersBySchool(school){
         var url = PLAYERS_BY_SCHOOL_REST_API_URL+"/"+school;
-        return axios.get(url)
-       
+        //check if there is space at the end
+        function hasSpaceAtEnd(str) {
+            return str[str.length - 1] === ' ';
+        }        
+        if(hasSpaceAtEnd(url)){
+            url = url.trim()+"%20";
+        }
+        return axios.get(url);
     }
     getPlayersByDivision(division){
         var url = PLAYERS_BY_DIVISION_REST_API_URL+"/"+division;
