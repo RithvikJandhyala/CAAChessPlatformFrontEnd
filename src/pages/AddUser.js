@@ -33,18 +33,34 @@ const AddUser = () => {
   
   
   const [loading,setLoading] = useState(false);
-  const saveUser = async(e) => {
-        e.preventDefault();   
-        if(isValidForm()){
-            setLoading(true);         
-            const user = {firstName,lastName,homeTeam,username,password,role}
-            await UserService.saveUser(user).then((response) => {                     
-                localStorage.message = response.data;
-                navigate ('/all-users');
-            })
-            setLoading(false);             
-        }
-  };
+ const saveUser = async(e) => {
+    e.preventDefault();
+    if (isValidForm()) {
+        setLoading(true);
+
+        // Trim the variables before constructing the user object
+        const trimmedFirstName = firstName.trim();
+        const trimmedLastName = lastName.trim();
+        const trimmedUsername = username.trim();
+        const trimmedPassword = password.trim();
+
+        const user = {
+            firstName: trimmedFirstName,
+            lastName: trimmedLastName,
+            homeTeam,
+            username: trimmedUsername,
+            password: trimmedPassword,
+            role
+        };
+
+        await UserService.saveUser(user).then((response) => {
+            localStorage.message = response.data;
+            navigate('/all-users');
+        });
+
+        setLoading(false);
+    }
+};
   const isValidForm = () => {
     var valid = true;
         if(username.length < 1){
